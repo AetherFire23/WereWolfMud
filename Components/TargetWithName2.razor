@@ -1,0 +1,51 @@
+﻿@using System.Diagnostics;
+@typeparam T
+
+<MudStack Row="true">
+
+    <MudButton OnClick="HandleButtonClick" Color="DetermineColor()">@GetButtonText()</MudButton>
+ 
+    <MudPaper Class="pa-3">@SelectionData.Data.ToString()</MudPaper>
+</MudStack>
+
+@code {
+    [Parameter]
+    public SelectionData<T> SelectionData { get; set; }
+
+    [Parameter]
+    public Action<TargetWithName2<T>> OnClick { get; set; }
+
+    [Parameter]
+    public bool MustDisableButton { get; set; }
+
+    private void HandleButtonClick()
+    {
+        if (OnClick != null)
+            OnClick(this);
+    }
+
+    private Color DetermineColor()
+    {
+        if(MustDisableButton)
+        {
+            return Color.Error;
+        }
+
+        Color colour = SelectionData.IsSelected
+        ? Color.Success
+        : Color.Default;
+        return colour;
+    }
+
+    private string GetButtonText()
+    {
+        if (MustDisableButton)
+        {
+            return "-";
+        }
+
+        return SelectionData.IsSelected
+            ? "Selected"
+            : "Select";
+    }
+}

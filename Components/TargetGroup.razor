@@ -1,0 +1,61 @@
+﻿@using System.Collections.Generic;
+@using System.Diagnostics;
+@typeparam T
+
+<MudPaper Width="250px">
+    <MudStack AlignItems="AlignItems.Center">
+            @foreach (var data in SelectionData)
+            {
+            <TargetWithName2 MustDisableButton="MustAbridge(data)" SelectionData="data" OnClick="HandleButtonClick" />
+            }
+
+    </MudStack>
+</MudPaper>
+
+
+@code {
+    [Parameter]
+    public List<T> Data { get; set; } = new List<T>();
+
+    [Parameter]
+    public int MaximumAllowedSelections { get; set; } = 1;
+
+
+    public List<SelectionData<T>> SelectionData { get; set; }
+    public List<SelectionData<T>> SelectedData => SelectionData.Where(x => x.IsSelected).ToList();
+
+    public int SelectedAmount => SelectedData.Count();
+    public bool HasReachedMaximumSelections => SelectedAmount == MaximumAllowedSelections;
+
+    public List<TargetWithName2<T>> sex = new List<TargetWithName2<T>>();
+
+    MudList _list;
+
+
+    private SelectionData<T> _lastSelected;
+    private void HandleButtonClick(TargetWithName2<T> clickedButton)
+    {
+        clickedButton.SelectionData.IsSelected = !clickedButton.SelectionData.IsSelected;
+
+        if (SelectedAmount > MaximumAllowedSelections)
+        {
+            _lastSelected.IsSelected = false;
+        }
+
+        StateHasChanged();
+        _lastSelected = clickedButton.SelectionData;
+    }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        SelectionData = Data.Select(x => new SelectionData<T>(x)).ToList();
+    }
+
+    private bool MustAbridge(SelectionData<T> data)
+    {
+        bool mustAbridge = HasReachedMaximumSelections && !SelectedData.Contains(data);
+        return mustAbridge;
+    }
+}

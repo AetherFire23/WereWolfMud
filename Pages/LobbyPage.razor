@@ -1,0 +1,24 @@
+﻿@page "/LobbyPage/{GameId:guid}"
+@inject NavigationManager _navigationManager;
+@inject IPlayerRepository _playerRepository;
+@using Microsoft.AspNetCore.SignalR.Client;
+@using WereWolfUltraCool.Interfaces;
+<PageTitle>LobbyPage</PageTitle>
+@implements IAsyncDisposable
+
+
+<MudStack AlignItems="AlignItems.Center" Justify="Justify.FlexStart" Spacing="2">
+    <MudText >Lobby!</MudText>
+    <MudText>@GameId</MudText>
+    @if (_players.Count > 0)
+    {
+        <MudPaper Width="300px">
+            <MudList Clickable="false">
+                @foreach (var player in _players)
+                {
+                    <MudListItem Text="@player.Name"/>
+                }
+            </MudList>
+        </MudPaper>
+    }
+</MudStack>

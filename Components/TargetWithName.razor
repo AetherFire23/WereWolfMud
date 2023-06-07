@@ -1,0 +1,45 @@
+﻿@using System.Diagnostics;
+@typeparam T
+
+<MudStack Row="true">
+    @if (!MustDisable)
+    {
+        <MudButton OnClick="HandleButtonClick">@GetButtonText()</MudButton>
+    }
+    <MudPaper Class="pa-3">@Data.ToString()</MudPaper>
+</MudStack>
+
+@code {
+    [Parameter]
+    public T Data { get; set; }
+
+    [Parameter]
+    public bool IsSelected { get; set; } = false;
+
+    [Parameter]
+    public bool MustDisable { get; set; } = false;
+
+    [Parameter]
+    public Action<TargetWithName<T>> OnClick { get; set; }
+
+    private void HandleButtonClick()
+    {
+        this.IsSelected = true;
+        if (OnClick != null)
+            OnClick(this);
+    }
+
+    private string GetButtonText()
+    {
+        if (MustDisable) return string.Empty;
+
+        return IsSelected
+            ? "Selected"
+            : "Select";
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        
+    }
+}

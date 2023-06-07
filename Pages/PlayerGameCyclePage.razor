@@ -1,0 +1,44 @@
+﻿@page "/GameCyclePage"
+@inject NavigationManager _navigationManager;
+@inject IPlayerRepository _playerRepository;
+@using Microsoft.AspNetCore.SignalR.Client;
+@using WereWolfUltraCool.Interfaces;
+
+<PageTitle>LobbyPage</PageTitle>
+@implements IAsyncDisposable
+<MudStack AlignItems="AlignItems.Center" Justify="Justify.FlexStart" Spacing="2">
+    <!-- Show night or day cycle -->
+    @if (_isDay)  //<!-- if Day Show voting-->
+    {
+        <!-- Voting Targets-->
+        <WereWolfMud.Components.TargetGroup Data="@_players" MaximumAllowedSelections="1" />
+        if (_isShowingGuiltyOrInnocentPrompt)
+        {
+            <!-- Show Annotation or something with MudCard with 2 buttons -->
+        }
+    }
+    else
+    {
+        if (_mustShowAbilityTargets)
+        {
+
+        }
+        else
+        {
+            // Show event text if cant show ability targets
+        }
+    }
+    <!-- else night,  show targets-->
+    <!-- if night && targetsSelected, showEvents -->
+    <!-- other page for Leader-->
+    @*
+    <MudPaper Width="300px">
+    <MudList Clickable="false">
+    @foreach (var player in _players)
+    {
+    <MudListItem Text="@player.Name" />
+    }
+    </MudList>
+    </MudPaper>*@
+
+</MudStack>

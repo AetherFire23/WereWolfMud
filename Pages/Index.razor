@@ -1,0 +1,56 @@
+﻿@page "/"
+@using Blazored.LocalStorage;
+@using WereWolfUltraCool.Interfaces;
+@inject NavigationManager _navigationManager;
+@inject IGameMakerService _gameMaker;
+@inject IPlayerService _playerService;
+@inject ILocalStorageService _storageService;
+@using Microsoft.AspNetCore.SignalR.Client;
+<PageTitle>Index</PageTitle>
+@implements IAsyncDisposable
+
+
+<MudStack AlignItems="AlignItems.Center" Justify="Justify.SpaceEvenly" Spacing="2">
+
+    <MudPaper MinWidth="300px" MaxWidth="301px" MaxHeight="500px" Style="overflow-x:auto">
+        <MudStack Spacing="1"> 
+            @foreach (var item in Enumerable.Range(0,10))
+            {
+                <WereWolfMud.Components.EventCardText Text="@item.ToString()"/>
+            }
+        </MudStack>
+    </MudPaper>
+
+
+    <WereWolfMud.Components.TargetGroup Data="s" MaximumAllowedSelections="2" />
+
+
+
+    <!-- Hide lobby creation if leader is not selected-->
+    @if (!_playerSelected)
+    {
+        <MudButton Color="Color.Secondary" Size="Size.Large" Variant="Variant.Filled" Href="/" OnClick="CreateNewLeader"> Join as Leader </MudButton>
+        <MudButton Color="Color.Tertiary"
+                   OnClick="@(()=> _playerSelected = true)"
+                   Size="Size.Large"
+                   Variant="Variant.Filled"> Join as Player </MudButton>
+    }
+    else
+    {
+        <MudButton Color="Color.Tertiary" OnClick="ResetPagePropeties"> Back</MudButton>
+
+        <MudTextField @bind-Value="NameValue" Label="PlayerName" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="GameIdValue" Label="GameId" Variant="Variant.Text"></MudTextField>
+        <MudButton Color="Color.Tertiary" OnClick="TryCreateNewPlayer"> Entrer dans la partie </MudButton>
+
+        if (!_isValidInput)
+        {
+            <MudText Color="Color.Error">Error for input !</MudText>
+            <MudText Color="Color.Error">@ErrorMessage</MudText>
+        }
+    }
+</MudStack>
+
+@code {
+    public List<string> s = new List<string>() { "sex", "lolzida", "Denis" };
+}
